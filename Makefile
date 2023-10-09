@@ -1,4 +1,4 @@
-MAIN_PACKAGE_PATH := ./cmd/webscraper
+MAIN_PACKAGE_PATH := ./
 BINARY_NAME := webscraper
 
 # ==================================================================================== #
