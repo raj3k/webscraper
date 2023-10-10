@@ -16,7 +16,6 @@ type ScrapeResult struct {
 
 func main() {
 	start := time.Now()
-	var wg sync.WaitGroup
 
 	urls := []string{
 		"https://toscrape.com/",
@@ -24,6 +23,7 @@ func main() {
 		"https://example.com/",
 	}
 
+	var wg sync.WaitGroup
 	resultChan := make(chan ScrapeResult, len(urls))
 	for _, url := range urls {
 		wg.Add(1)
