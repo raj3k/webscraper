@@ -34,7 +34,7 @@ func ParseHTML(s string) string {
 		case html.TextToken:
 			if inBody && !inScript {
 				// Append text content
-				text := strings.TrimSpace(string(tokenizer.Text()))
+				text := strings.TrimSpace(strings.ToLower(string(tokenizer.Text())))
 				if len(text) > 0 {
 					textContent += text + " "
 				}

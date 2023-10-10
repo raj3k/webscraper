@@ -22,7 +22,7 @@ func (r Root) FullText() string {
 			return
 		}
 		if n.Type == html.TextNode {
-			buf.WriteString(strings.TrimSpace(n.Data))
+			buf.WriteString(strings.TrimSpace(strings.ToLower(n.Data)))
 			buf.WriteString(" ")
 		}
 		if n.Type == html.ElementNode && n.Data != "script" && n.Data != "style" {
