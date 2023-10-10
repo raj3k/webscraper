@@ -2,34 +2,60 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"sync"
+	"time"
 	"webscraper/internal/client"
 	"webscraper/internal/counter"
 	"webscraper/internal/parse"
 )
 
+type ScrapeResult struct {
+	URL    string
+	Result string
+}
+
 func main() {
+	start := time.Now()
+
 	urls := []string{
 		"https://toscrape.com/",
 		"https://www.scrapethissite.com/pages/",
 		"https://example.com/",
 	}
-	response, err := client.Get(urls[0])
+
+	var wg sync.WaitGroup
+	resultChan := make(chan ScrapeResult, len(urls))
+	for _, url := range urls {
+		wg.Add(1)
+		go ScrapeUrl(url, &wg, resultChan)
+	}
+
+	wg.Wait()
+
+	close(resultChan)
+
+	for sr := range resultChan {
+		mostFrequent := counter.MostFrequentWords(sr.Result, 3)
+		fmt.Printf("Top 3 most frequent words from %s:\n", sr.URL)
+		for _, wc := range mostFrequent {
+			fmt.Printf("%s: %d\n", wc.Word, wc.Count)
+		}
+	}
+
+	fmt.Println(time.Since(start))
+}
+
+func ScrapeUrl(url string, wg *sync.WaitGroup, resultChan chan<- ScrapeResult) {
+	defer wg.Done()
+
+	response, err := client.Get(url)
 	if err != nil {
-		fmt.Println("Error: ", err.Error())
-		os.Exit(1)
+		resultChan <- ScrapeResult{URL: url, Result: fmt.Sprintf("Error scraping %s: %s", url, err.Error())}
 	}
 
 	doc := parse.HTMLParse(response)
 	text := doc.FullText()
-
 	//text := tokenizer.ParseHTML(response)
-	//fmt.Println(text)
 
-	mostFrequent := counter.MostFrequentWords(text, 10)
-
-	fmt.Println("Top 3 most frequent words:")
-	for _, wc := range mostFrequent {
-		fmt.Printf("%s: %d\n", wc.Word, wc.Count)
-	}
+	resultChan <- ScrapeResult{URL: url, Result: text}
 }
