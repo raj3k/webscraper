@@ -1,15 +1,30 @@
 package client
 
 import (
+	"fmt"
 	"golang.org/x/net/html/charset"
 	"io"
 	"net/http"
+	"sync"
 	"webscraper/internal/errors"
 )
 
-var defaultClient = &http.Client{}
+var (
+	defaultClient = &http.Client{}
+	cache         = make(map[string]string)
+	cacheMutex    sync.Mutex
+)
 
 func Get(url string) (string, error) {
+	cacheMutex.Lock()
+	cachedResponse, found := cache[url]
+	cacheMutex.Unlock()
+
+	if found {
+		fmt.Println("Cache hit for URL:", url)
+		return cachedResponse, nil
+	}
+
 	return getWithClient(url, defaultClient)
 }
 
@@ -19,7 +34,6 @@ func getWithClient(url string, client *http.Client) (string, error) {
 		return "", errors.NewError(errors.ErrCreatingGetRequest, "error creating get request to"+url)
 	}
 
-	// Perform request
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", errors.NewError(errors.ErrInGetRequest, "couldn't perform GET request to "+url)
@@ -33,5 +47,10 @@ func getWithClient(url string, client *http.Client) (string, error) {
 	if err != nil {
 		return "", errors.NewError(errors.ErrReadingResponse, "unable to read the response body")
 	}
+
+	cacheMutex.Lock()
+	cache[url] = string(bytes)
+	cacheMutex.Unlock()
+
 	return string(bytes), nil
 }
