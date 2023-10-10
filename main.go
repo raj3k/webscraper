@@ -9,8 +9,12 @@ import (
 )
 
 func main() {
-	url := "https://www.wp.pl/"
-	response, err := client.Get(url)
+	urls := []string{
+		"https://toscrape.com/",
+		"https://www.scrapethissite.com/pages/",
+		"https://example.com/",
+	}
+	response, err := client.Get(urls[0])
 	if err != nil {
 		fmt.Println("Error: ", err.Error())
 		os.Exit(1)
