@@ -29,10 +29,14 @@ func main() {
 	}
 
 	var wg sync.WaitGroup
+	// Semaphore channel
+	var sem = make(chan int, 4)
+
 	resultChan := make(chan ScrapeResult, len(urls))
 	for _, url := range urls {
 		wg.Add(1)
-		go ScrapeUrl(url, &wg, resultChan)
+		sem <- 1
+		go ScrapeUrl(url, &wg, resultChan, sem)
 	}
 
 	wg.Wait()
@@ -67,7 +71,7 @@ func main() {
 	fmt.Println(time.Since(start))
 }
 
-func ScrapeUrl(url string, wg *sync.WaitGroup, resultChan chan<- ScrapeResult) {
+func ScrapeUrl(url string, wg *sync.WaitGroup, resultChan chan<- ScrapeResult, sem <-chan int) {
 	defer wg.Done()
 
 	response, err := client.Get(url)
@@ -80,6 +84,7 @@ func ScrapeUrl(url string, wg *sync.WaitGroup, resultChan chan<- ScrapeResult) {
 	//text := tokenizer.ParseHTML(response)
 
 	resultChan <- ScrapeResult{URL: url, Result: text}
+	<-sem
 }
 
 func parseURLEnv(env string) ([]string, error) {
@@ -89,6 +94,7 @@ func parseURLEnv(env string) ([]string, error) {
 			"https://toscrape.com/",
 			"https://www.scrapethissite.com/pages/",
 			"https://example.com/",
+			"https://www.wp.pl",
 		}
 		return urls, nil
 	}
