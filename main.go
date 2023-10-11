@@ -47,6 +47,7 @@ func main() {
 		}
 	}
 
+	// For cache testing
 	url := "https://example.com/"
 	response, err := client.Get(url)
 	if err != nil {
