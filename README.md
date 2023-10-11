@@ -11,7 +11,7 @@
 
 ## Introduction
 
-This tool is a website word frequency analyzer built using Go (Golang). It leverages goroutines, channels, and the standard Go library to combine text from multiple websites and generate a list of the most frequently appearing words.
+This tool is a website word frequency analyzer built using Go (Golang). It leverages goroutines, channels, and the standard Go library to combine text from multiple websites and generate a list of the most frequently appearing words. I followed tasks listed in [Projects](https://github.com/users/raj3k/projects/5) while building this tool.
 
 ## Features
 
@@ -19,7 +19,7 @@ This tool is a website word frequency analyzer built using Go (Golang). It lever
 - [Generate word frequency statistics.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L43C3-L43C3)
 - [Concurrent using goroutines and channels.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L35)
 - [Basic cache mechanism.](https://github.com/raj3k/webscraper/blob/7-create-readme/internal/client/client.go#L20)
-- Limit the number of concurrently running goroutines.
+- [Limit the number of concurrently running goroutines.](https://github.com/raj3k/webscraper/blob/main/main.go#L33)
 
 ## Prerequisites
 
