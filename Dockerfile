@@ -2,9 +2,7 @@ FROM golang:1.21
 
 WORKDIR /app
 
-ARG DEFAULT_URLS="https://toscrape.com/,https://www.scrapethissite.com/pages/,https://example.com/"
-
-ENV URLS=${DEFAULT_URLS}
+ENV URLS=""
 
 COPY . .
 
