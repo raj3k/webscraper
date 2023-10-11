@@ -11,7 +11,5 @@ COPY . .
 RUN go mod download
 
 RUN go build -o webscraper
-# Define an environment variable for passing URLs to the container
-#ENV URLS https://toscrape.com/,https://www.scrapethissite.com/pages/,https://example.com/
 
 CMD ["./webscraper"]
