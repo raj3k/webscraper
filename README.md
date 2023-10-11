@@ -46,7 +46,7 @@ Before you begin, ensure you have the following installed on your system:
     b. Run project using **Docker**:
     ```shell
    docker build -t webscraper .
-   docker build -e URLS="https://example.com/,https://example2.com/" webscraper
+   docker build -e URLS="https://example.com/,https://toscrape.com/" webscraper
     ```
    or
     ```shell
