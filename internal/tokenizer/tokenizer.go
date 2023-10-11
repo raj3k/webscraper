@@ -8,8 +8,8 @@ import (
 func ParseHTML(s string) string {
 	tokenizer := html.NewTokenizer(strings.NewReader(s))
 	var textContent string
-	inBody := false
 	inScript := false
+	inStyle := false
 
 	for {
 		tokenType := tokenizer.Next()
@@ -19,20 +19,20 @@ func ParseHTML(s string) string {
 			return textContent
 		case html.StartTagToken, html.SelfClosingTagToken:
 			token := tokenizer.Token()
-			if token.Data == "body" {
-				inBody = true
-			} else if token.Data == "script" {
+			if token.Data == "script" {
 				inScript = true
+			} else if token.Data == "style" {
+				inStyle = true
 			}
 		case html.EndTagToken:
 			token := tokenizer.Token()
-			if token.Data == "body" {
-				inBody = false
-			} else if token.Data == "script" {
+			if token.Data == "script" {
 				inScript = false
+			} else if token.Data == "style" {
+				inStyle = false
 			}
 		case html.TextToken:
-			if inBody && !inScript {
+			if !inScript && !inStyle {
 				// Append text content
 				text := strings.TrimSpace(strings.ToLower(string(tokenizer.Text())))
 				if len(text) > 0 {
