@@ -10,9 +10,19 @@ type WordCount struct {
 	Count int
 }
 
-func CountWords(input string) []WordCount {
+func clearPunctuation(input string) string {
+	input = strings.Map(func(r rune) rune {
+		if strings.ContainsRune(".,!?;:", r) {
+			return -1
+		}
+		return r
+	}, input)
+	return input
+}
+
+func countWords(input string) []WordCount {
 	// Split the input string into words
-	words := strings.Fields(input)
+	words := strings.Fields(clearPunctuation(input))
 
 	// Create a map to store word counts
 	wordCounts := make(map[string]int)
@@ -32,7 +42,7 @@ func CountWords(input string) []WordCount {
 }
 
 func MostFrequentWords(input string, num int) []WordCount {
-	wordCountList := CountWords(input)
+	wordCountList := countWords(input)
 
 	// Sort the WordCount slice by count in descending order
 	sortedWordCount := sortByCountDescending(wordCountList)
