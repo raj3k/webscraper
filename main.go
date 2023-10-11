@@ -19,9 +19,10 @@ type ScrapeResult struct {
 
 func main() {
 	start := time.Now()
-
 	urlsEnv := os.Getenv("URLS")
 
+	numOfRecords := 5   // number of top frequent words from website
+	goroutineLimit := 2 // limit concurrent goroutines
 	urls, err := parseURLEnv(urlsEnv)
 	if err != nil {
 		fmt.Println("Error: ", err.Error())
@@ -30,7 +31,7 @@ func main() {
 
 	var wg sync.WaitGroup
 	// Semaphore channel
-	var sem = make(chan int, 4)
+	var sem = make(chan int, goroutineLimit)
 
 	resultChan := make(chan ScrapeResult, len(urls))
 	for _, url := range urls {
@@ -44,8 +45,8 @@ func main() {
 	close(resultChan)
 
 	for sr := range resultChan {
-		mostFrequent := counter.MostFrequentWords(sr.Result, 3)
-		fmt.Printf("Top 3 most frequent words from %s:\n", sr.URL)
+		mostFrequent := counter.MostFrequentWords(sr.Result, numOfRecords)
+		fmt.Printf("Top %d most frequent words from %s:\n", numOfRecords, sr.URL)
 		for _, wc := range mostFrequent {
 			fmt.Printf("%s: %d\n", wc.Word, wc.Count)
 		}
@@ -62,13 +63,14 @@ func main() {
 	doc := parse.HTMLParse(response)
 	text := doc.FullText()
 
-	mostFrequent := counter.MostFrequentWords(text, 3)
-	fmt.Printf("Top 3 most frequent words from %s:\n", url)
+	mostFrequent := counter.MostFrequentWords(text, numOfRecords)
+	fmt.Printf("Top %d most frequent words from %s:\n", numOfRecords, url)
 	for _, wc := range mostFrequent {
 		fmt.Printf("%s: %d\n", wc.Word, wc.Count)
 	}
 
-	fmt.Println(time.Since(start))
+	fmt.Println("------------------------------------------")
+	fmt.Println("Running time:", time.Since(start))
 }
 
 func ScrapeUrl(url string, wg *sync.WaitGroup, resultChan chan<- ScrapeResult, sem <-chan int) {
