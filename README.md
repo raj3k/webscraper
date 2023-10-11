@@ -7,7 +7,9 @@
 - [Getting Started](#getting-started)
     - [Usage](#usage)
     - [Test](#test)
+- [Outputs](#outputs)
 - [References](#references)
+
 
 ## Introduction
 
@@ -64,6 +66,12 @@ Before you begin, ensure you have the following installed on your system:
     ```shell
    make test
     ```
+
+## Outputs
+### Using Makefile and limiting to 2 concurrent goroutines
+![2.png](2.png)
+### Using Makefile and limiting to 4 concurrent goroutines
+![4.png](4.png)
 
 ## References
 - https://github.com/anaskhan96/soup/tree/master
