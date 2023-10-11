@@ -25,7 +25,7 @@ This tool is a website word frequency analyzer built using Go (Golang). It lever
 
 Before you begin, ensure you have the following installed on your system:
 
-- [Go (Golang)](https://golang.org/doc/install)
+- [Go 1.21 (Golang)](https://golang.org/doc/install)
 - Optional: [Docker](https://www.docker.com/)
 ## Getting Started
 
@@ -36,11 +36,11 @@ Before you begin, ensure you have the following installed on your system:
    git clone https://github.com/raj3k/webscraper.git
    cd webscraper
    ```
-2. Run project using **Makefile**:
+    a. Run project using **Makefile**:
     ```shell
    make run
     ```
-3. Run project using **Docker**:
+    b. Run project using **Docker**:
     ```shell
    docker build -t webscraper .
    docker build -e URLS="https://example.com/,https://example2.com/" webscraper
