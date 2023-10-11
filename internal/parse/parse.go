@@ -22,8 +22,14 @@ func (r Root) FullText() string {
 			return
 		}
 		if n.Type == html.TextNode {
-			buf.WriteString(strings.TrimSpace(strings.ToLower(n.Data)))
-			buf.WriteString(" ")
+			if !strings.HasPrefix(n.Data, "\n") {
+				if buf.Len() == 0 {
+					buf.WriteString(strings.TrimSpace(strings.ToLower(n.Data)))
+				} else {
+					buf.WriteString(" ")
+					buf.WriteString(strings.TrimSpace(strings.ToLower(n.Data)))
+				}
+			}
 		}
 		if n.Type == html.ElementNode && n.Data != "script" && n.Data != "style" {
 			f(n.FirstChild)
