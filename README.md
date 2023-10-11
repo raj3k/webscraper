@@ -7,6 +7,7 @@
 - [Getting Started](#getting-started)
     - [Usage](#usage)
     - [Test](#test)
+- [References](#references)
 
 ## Introduction
 
@@ -14,10 +15,10 @@ This tool is a website word frequency analyzer built using Go (Golang). It lever
 
 ## Features
 
-- Fetch text content from multiple websites.
-- Analyze and generate word frequency statistics.
-- Concurrent using goroutines and channels.
-- Basic cache mechanism.
+- [Fetch text content from multiple websites.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L33C28-L33C28)
+- [Generate word frequency statistics.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L43C3-L43C3)
+- [Concurrent using goroutines and channels.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L35)
+- [Basic cache mechanism.](https://github.com/raj3k/webscraper/blob/7-create-readme/internal/client/client.go#L20)
 - Limit the number of concurrently running goroutines.
 
 ## Prerequisites
@@ -60,3 +61,9 @@ Before you begin, ensure you have the following installed on your system:
     ```shell
    make test
     ```
+
+## References
+- https://github.com/anaskhan96/soup/tree/master
+- https://github.com/lotusirous/go-concurrency-patterns/blob/main/10-google2.0/main.go
+- https://github.com/luk4z7/go-concurrency-guide
+- https://medium.com/@deckarep/gos-extended-concurrency-semaphores-part-1-5eeabfa351ce
