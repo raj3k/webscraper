@@ -19,11 +19,11 @@ This tool is a website word frequency analyzer built using Go (Golang). It lever
 
 ## Features
 
-- [Fetch text content from multiple websites.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L33C28-L33C28)
-- [Generate word frequency statistics.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L43C3-L43C3)
-- [Concurrent using goroutines and channels.](https://github.com/raj3k/webscraper/blob/7-create-readme/main.go#L35)
-- [Basic cache mechanism.](https://github.com/raj3k/webscraper/blob/7-create-readme/internal/client/client.go#L20)
-- [Limit the number of concurrently running goroutines.](https://github.com/raj3k/webscraper/blob/main/main.go#L33)
+- [Fetch text content from multiple websites.](https://github.com/raj3k/webscraper/blob/main/main.go#L37)
+- [Generate word frequency statistics.](https://github.com/raj3k/webscraper/blob/main/main.go#L48)
+- [Concurrent using goroutines and channels.](https://github.com/raj3k/webscraper/blob/main/main.go#L40)
+- [Basic cache mechanism.](https://github.com/raj3k/webscraper/blob/main/internal/client/client.go#L20C11-L20C11)
+- [Limit the number of concurrently running goroutines.](https://github.com/raj3k/webscraper/blob/main/main.go#L34C28-L34C28)
 - [Running application in Docker container](https://github.com/raj3k/webscraper/blob/main/Dockerfile)
 
 ## Prerequisites
