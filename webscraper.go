@@ -121,18 +121,10 @@ type Cached struct {
 }
 
 func (w *WebScraper) readCache(url string) (string, error) {
-	path, err := os.Getwd()
+	cacheFile, err := w.getCacheFilePath(url)
 	if err != nil {
 		return "", err
 	}
-
-	cacheDir := filepath.Join(path, "cache")
-	sum := sha1.Sum([]byte(url))
-	hash := hex.EncodeToString(sum[:])
-	if _, err := os.Stat(cacheDir); err != nil {
-		return "", err
-	}
-	cacheFile := filepath.Join(cacheDir, hash)
 
 	file, err := os.Open(cacheFile)
 	if err != nil {
@@ -150,20 +142,16 @@ func (w *WebScraper) updateCache(url string, data []byte) error {
 		Data: data,
 	}
 
-	path, err := os.Getwd()
+	cacheFile, err := w.getCacheFilePath(url)
 	if err != nil {
 		return err
 	}
 
-	cacheDir := filepath.Join(path, "cache")
-	sum := sha1.Sum([]byte(url))
-	hash := hex.EncodeToString(sum[:])
-	if _, err := os.Stat(cacheDir); err != nil {
-		if err := os.MkdirAll(cacheDir, 0750); err != nil {
+	if _, err := os.Stat(filepath.Dir(cacheFile)); err != nil {
+		if err := os.MkdirAll(filepath.Dir(cacheFile), 0750); err != nil {
 			return err
 		}
 	}
-	cacheFile := filepath.Join(cacheDir, hash)
 
 	file, err := os.Create(cacheFile)
 	if err != nil {
@@ -176,4 +164,18 @@ func (w *WebScraper) updateCache(url string, data []byte) error {
 	file.Close()
 
 	return nil
+}
+
+func (w *WebScraper) getCacheFilePath(url string) (string, error) {
+	path, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	sum := sha1.Sum([]byte(url))
+	hash := hex.EncodeToString(sum[:])
+
+	cacheDir := filepath.Join(path, "cache")
+	cacheFile := filepath.Join(cacheDir, hash)
+
+	return cacheFile, nil
 }
