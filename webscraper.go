@@ -1,9 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"crypto/sha1"
+	"encoding/gob"
+	"encoding/hex"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -25,7 +29,7 @@ type WebScraper struct {
 	wg              sync.WaitGroup
 	mu              sync.Mutex
 	waitChan        chan int
-	resultContainer map[string]interface{} // works like cache
+	resultContainer map[string]interface{}
 }
 
 func NewWebScraper(options ...WebScraperOption) *WebScraper {
@@ -59,11 +63,9 @@ func (w *WebScraper) Scrape(url string) error {
 }
 
 func (w *WebScraper) fetch(req *http.Request) error {
-	w.mu.Lock()
-	_, found := w.resultContainer[req.URL.String()]
-	w.mu.Unlock()
-	if found {
-		fmt.Println("Cache hit for URL:", req.URL.String())
+
+	if data, _ := w.readCache(req.URL.String()); data != "" {
+		w.saveToContainer(req.URL.String(), data)
 		return nil
 	}
 
@@ -80,6 +82,8 @@ func (w *WebScraper) fetch(req *http.Request) error {
 	if err != nil {
 		return err
 	}
+
+	w.updateCache(req.URL.String(), body)
 
 	w.saveToContainer(req.URL.String(), string(body))
 	return nil
@@ -110,4 +114,66 @@ func (w *WebScraper) LimitGoroutines(limit ...int) {
 		waitChanSize = 1
 	}
 	w.waitChan = make(chan int, waitChanSize)
+}
+
+type Cached struct {
+	Data []byte
+}
+
+func (w *WebScraper) readCache(url string) (string, error) {
+	path, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	cacheDir := filepath.Join(path, "cache")
+	sum := sha1.Sum([]byte(url))
+	hash := hex.EncodeToString(sum[:])
+	if _, err := os.Stat(cacheDir); err != nil {
+		return "", err
+	}
+	cacheFile := filepath.Join(cacheDir, hash)
+
+	file, err := os.Open(cacheFile)
+	if err != nil {
+		return "", err
+	}
+
+	cached := new(Cached)
+	err = gob.NewDecoder(file).Decode(cached)
+	file.Close()
+	return string(cached.Data), nil
+}
+
+func (w *WebScraper) updateCache(url string, data []byte) error {
+	cached := Cached{
+		Data: data,
+	}
+
+	path, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	cacheDir := filepath.Join(path, "cache")
+	sum := sha1.Sum([]byte(url))
+	hash := hex.EncodeToString(sum[:])
+	if _, err := os.Stat(cacheDir); err != nil {
+		if err := os.MkdirAll(cacheDir, 0750); err != nil {
+			return err
+		}
+	}
+	cacheFile := filepath.Join(cacheDir, hash)
+
+	file, err := os.Create(cacheFile)
+	if err != nil {
+		return err
+	}
+	if err := gob.NewEncoder(file).Encode(cached); err != nil {
+		file.Close()
+		return err
+	}
+	file.Close()
+
+	return nil
 }
