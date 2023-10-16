@@ -22,7 +22,7 @@ This tool is a website word frequency analyzer built using Go (Golang). It lever
 - [Fetch text content from multiple websites.](https://github.com/raj3k/webscraper/blob/main/main.go#L28C10-L28C10)
 - [Generate word frequency statistics.](https://github.com/raj3k/webscraper/blob/main/main.go#L39)
 - [Concurrent using goroutines and channels.](https://github.com/raj3k/webscraper/blob/main/webscraper.go#L52)
-- [Basic cache mechanism.](https://github.com/raj3k/webscraper/blob/main/webscraper.go#L28C10-L28C10)
+- [Basic cache mechanism.](https://github.com/raj3k/webscraper/blob/main/webscraper.go#L123)
 - [Limit the number of concurrently running goroutines.](https://github.com/raj3k/webscraper/blob/main/webscraper.go#L105)
 - [Running application in Docker container](https://github.com/raj3k/webscraper/blob/main/Dockerfile)
 
