@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 	"time"
 	"webscraper/internal/counter"
@@ -13,10 +14,11 @@ import (
 func main() {
 	start := time.Now()
 	urlsEnv := os.Getenv("URLS")
+	CPUCount := runtime.NumCPU()
 
 	ws := NewWebScraper(Async())
 
-	ws.LimitGoroutines(4)
+	ws.LimitGoroutines(CPUCount)
 
 	urls, err := parseURLEnv(urlsEnv)
 	if err != nil {
